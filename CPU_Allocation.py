@@ -1,5 +1,5 @@
 from pyVim.connect import SmartConnect
-import pyVmomi
+from import pyVmomi import vim
 import ssl
 import getpass
 
