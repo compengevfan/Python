@@ -31,7 +31,7 @@ def main():
 		EpisodeCount = input("How many episodes on this disk? ")
 
 		while EpisodeCount != 0:
-            EpisodeNumber = input("Episode number: ")
+			EpisodeNumber = input("Episode number: ")
 			Title = input("Title number for episode " + str(EpisodeNumber) + ": ")
 			InputLocation = '"' + args.p + "\\" + disk + '" -t'
 			OutputLocation = '-o "\\\storage1\media\TV Shows\\' + args.s + "\Season " + args.n + "\\" + args.s + " - s" + args.n + "e" + str(EpisodeNumber)
