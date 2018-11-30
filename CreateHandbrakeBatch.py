@@ -22,8 +22,6 @@ def main():
 	
 	BatchFileOutput = ""
 
-	EpisodeNumber = 1
-
 	UnixPath = toUnix(args.p)
 
 	disks = os.listdir(UnixPath)
@@ -33,6 +31,7 @@ def main():
 		EpisodeCount = input("How many episodes on this disk? ")
 
 		while EpisodeCount != 0:
+			EpisodeNumber = input("Episode number: ")
 			Title = input("Title number for episode " + str(EpisodeNumber) + ": ")
 			InputLocation = '"' + args.p + "\\" + disk + '" -t'
 			OutputLocation = '-o "\\\storage1\media\TV Shows\\' + args.s + "\Season " + args.n + "\\" + args.s + " - s" + args.n + "e" + str(EpisodeNumber)
@@ -40,16 +39,15 @@ def main():
 			
 			#print BatchFileOutput
 			
-			EpisodeNumber += 1
 			EpisodeCount -= 1
 		print "Going to next disk..."
 		
 	
 		
-	if not os.access("G:\Cloud\Dropbox\EpisodeTracker\\" + args.s, os.F_OK):
-		os.mkdir("G:\Cloud\Dropbox\EpisodeTracker\\" + args.s)
+	if not os.access("C:\Cloud\Dropbox\EpisodeTracker\\" + args.s, os.F_OK):
+		os.mkdir("C:\Cloud\Dropbox\EpisodeTracker\\" + args.s)
 	
-	BatFile = open("G:\Cloud\Dropbox\EpisodeTracker\\" + args.s + "\Season " + args.n + ".bat", "w")
+	BatFile = open("C:\Cloud\Dropbox\EpisodeTracker\\" + args.s + "\Season " + args.n + ".bat", "w")
 	BatFile.write(BatchFileOutput)
 	BatFile.close()
 
