@@ -19,9 +19,9 @@ def main():
 	args = getargs()
 	
 	if args.d == "d":
-		BeginCommand = '"c:\Program Files\Handbrake\HandBrakeCLI" -Z "Roku 720p30 Surround" --no-dvdnav -i'
+		BeginCommand = r'"c:\Program Files\Handbrake\HandBrakeCLI" -Z "Roku 720p30 Surround" --no-dvdnav -i'
 	if args.d == "b":
-		BeginCommand = '"c:\Program Files\Handbrake\HandBrakeCLI" -Z "Roku 1080p30 Surround" --no-dvdnav -i'
+		BeginCommand = r'"c:\Program Files\Handbrake\HandBrakeCLI" -Z "Roku 1080p30 Surround" --no-dvdnav -i'
 
 	EndCommand = '.mp4" -m -a "1" -s "scan"'
 	
