@@ -1,13 +1,7 @@
-import sys
+import requests
 import json
 
-data = {
-    "president": {
-        "name": "Zaphod Beeblebrox",
-        "species": "Betelgeusian"
-    }
-}
+response = requests.get("https://jsonplaceholder.typicode.com/todos")
+todos = json.loads(response.text)
 
-json_string = json.dumps(data)
-
-print(json_string)
+print("Complete")
