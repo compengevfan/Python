@@ -3,12 +3,13 @@ def BrocadeEnvironment(Environment):
     #Returns the appropriate IP addresses of the Brocade switches for that environment
     import sys
 
-    Environments = ['Prod', 'DR', 'DEV']
+    Environments = ['PROD', 'DR', 'DEV']
+    Environment = Environment.upper()
 
     while Environment not in Environments:
-        Environment = input("Please provide the environment (Prod, DR, Test)")
+        Environment = input("Please provide the environment (PROD, DR, DEV): ")
 
-    if Environment == "Prod":
+    if Environment == "PROD":
         SW1_IP = "IP"
         SW2_IP = "IP"
     if Environment == "DR":
