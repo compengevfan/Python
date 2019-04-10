@@ -4,9 +4,9 @@ import getpass
 import xmltodict
 import http.client as http
 import pyfos.pyfos_auth as auth
-import xml.etree.ElementTree as ET
+#import xml.etree.ElementTree as ET
 
-Environments = ['Prod', 'DR', 'Test']
+Environments = ['Prod', 'DR', 'DEV']
 
 if len(sys.argv) == 3:
     SW_Username = sys.argv[0]
@@ -23,11 +23,11 @@ if Environment == "Prod":
     SW1_IP = "IP"
     SW2_IP = "IP"
 if Environment == "DR":
-    SW1_IP = "10.92.238.99"
-    SW2_IP = "10.92.238.100"
-if Environment == "Test":
     SW1_IP = "IP"
     SW2_IP = "IP"
+if Environment == "DEV":
+    SW1_IP = "10.92.238.99"
+    SW2_IP = "10.92.238.100"
 
 #Connecting to Switch1
 SW1_Session = auth.login(SW_Username, SW_Password, SW1_IP, "None")
@@ -64,18 +64,7 @@ for i in range(0, len(doc['Response']['fibrechannel'])):
     doc['Response']['fibrechannel'][i]['user-friendly-name']
 
 #Getting port list from Switch 2
-SW2_Connection = http.HTTPConnection(ip2)
-method = "GET"
-URI = "/rest/running/brocade-interface/fibrechannel"
-Body = None
-SW2_Connection.request(method, URI, Body, header2)
 
-if SW2_Session.get('throttle_delay') > 0:
-    time.sleep(SW2_Session.get('throttle_delay'))
-response2 = SW2_Connection.getresponse()
-
-DataAsXML2 = ET.fromstring((response2.read()))
-DataAsXML2
 
 #Closing session on Switch 1
 auth.logout(SW1_Session)
