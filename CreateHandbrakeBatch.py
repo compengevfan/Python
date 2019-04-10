@@ -34,7 +34,7 @@ def main():
 	disks = os.listdir(UnixPath)
 	disks.sort()
 	for disk in disks:
-		print "Processing disk: " + disk
+		print("Processing disk: " + disk)
 		EpisodeCount = input("How many episodes on this disk? ")
 
 		while EpisodeCount != 0:
