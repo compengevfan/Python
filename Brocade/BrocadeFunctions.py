@@ -7,7 +7,7 @@ def BrocadeEnvironment(Environment):
     Environment = Environment.upper()
 
     while Environment not in Environments:
-        Environment = input("Please provide the environment (PROD, DR, DEV): ")
+        Environment = input("Please provide the environment (PROD, DR, DEV): ").upper()
 
     if Environment == "PROD":
         SW1_IP = "IP"
@@ -73,4 +73,5 @@ def BrocadeDisconnect(Session):
     #Accepts session to terminate.
     import pyfos.pyfos_auth as auth
 
-    auth.logout(Session)
+    Output = auth.logout(Session)
+    return Output

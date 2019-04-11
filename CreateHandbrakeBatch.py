@@ -51,7 +51,7 @@ def main():
 			
 			EpisodeCount -= 1
 			i += 1
-		print "Going to next disk..."
+		print("Going to next disk...")
 
 	if not os.access("C:\Cloud\Dropbox\EpisodeTracker\\" + args.s, os.F_OK):
 		os.mkdir("C:\Cloud\Dropbox\EpisodeTracker\\" + args.s)
