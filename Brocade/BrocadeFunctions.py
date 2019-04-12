@@ -46,28 +46,91 @@ def BrocadeThrottle(Connection):
 
     return Delay
 
+def BrocadeAliasPost(Header, IP, Delay, Name, Port, WWN):
+    #Accepts header, switch IP, delay time, alias name, port ID, and WWN 
+    #Returns response code from the HTTP request
+    import time
+    import http.client as http
+
+    HTTP_Connection = http.HTTPConnection(IP)
+    method = "POST"
+    URI = "/rest/running/zoning/defined-configuration/alias"
+    Body = '<alias><alias-name>' + Name + '_' + Port + '</alias-name><member-entry><alias-entry-name>' + WWN + '</alias-entry-name></member-entry></alias>'
+    HTTP_Connection.request(method, URI, Body, Header)
+
+    if Delay > 0:
+        time.sleep(Delay)
+    response = HTTP_Connection.getresponse()
+    ResponseCode = response.code
+
+    return ResponseCode
+
+def BrocadeEnable(Header, IP, Delay, CheckSum, CfgName):
+    import time
+    import http.client as http
+
+    HTTP_Connection = http.HTTPConnection(IP)
+    method = "PATCH"
+    URI = "/rest/running/zoning/effective-configuration/cfg-name/" + CfgName
+    Body = '<checksum>' + CheckSum + '</checksum>'
+    HTTP_Connection.request(method, URI, Body, Header)
+
+    if Delay > 0:
+        time.sleep(Delay)
+    response = HTTP_Connection.getresponse()
+
+    print("Place holder")
+
+def BrocadeInfo(Header, IP, Delay):
+    #Accepts header, switch IP and delay to obtain the checksum of the switch's effective config
+    #Returns the checksum
+    import time
+    import xmltodict
+    import http.client as http
+
+    HTTP_Connection = http.HTTPConnection(IP)
+    method = "GET"
+    URI = "/rest/running/zoning/effective-configuration"
+    Body = None
+    HTTP_Connection.request(method, URI, Body, Header)
+
+    if Delay > 0:
+        time.sleep(Delay)
+    response = HTTP_Connection.getresponse()
+
+    RespBody = xmltodict.parse(response.read())
+
+    CheckSum = RespBody['Response']['effective-configuration']['checksum']
+    CfgName = RespBody['Response']['effective-configuration']['cfg-name']
+
+    return CheckSum, CfgName
+
 def BrocadePortList(Header, IP, Delay):
-    #Accepts header and switch IP to perform REST call
+    #Accepts header, switch IP and delay time to perform REST call
     #Performs REST call and obtains all the switch port information.
     #Extracts needed info and returns that info as a list/dict
     import time
     import xmltodict
     import http.client as http
 
-    SW1_Connection = http.HTTPConnection(IP)
+    HTTP_Connection = http.HTTPConnection(IP)
     method = "GET"
     URI = "/rest/running/brocade-interface/fibrechannel"
     Body = None
-    SW1_Connection.request(method, URI, Body, Header)
+    HTTP_Connection.request(method, URI, Body, Header)
 
     if Delay > 0:
         time.sleep(Delay)
-    response = SW1_Connection.getresponse()
+    response = HTTP_Connection.getresponse()
 
-    DataAsXML = xmltodict.parse(response.read())
+    RespBody = xmltodict.parse(response.read())
 
-    for i in range(0, len(DataAsXML['Response']['fibrechannel'])):
-        DataAsXML['Response']['fibrechannel'][i]['user-friendly-name']
+    # ReturnList = []
+    # for i in range(0, len(DataAsXML['Response']['fibrechannel'])):
+    #     ReturnList.append(DataAsXML['Response']['fibrechannel'][i]['user-friendly-name'])
+
+    # return ReturnList
+    return RespBody
 
 def BrocadeDisconnect(Session):
     #Accepts session to terminate.
