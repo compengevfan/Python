@@ -35,7 +35,7 @@ def main():
 
     print("Extracting throttle delay setting for switch 1...")
     Delay1 = BF.BrocadeThrottle(Connection1)
-    print("Extracting throttle delay setting for switch 1...")
+    print("Extracting throttle delay setting for switch 2...")
     Delay2 = BF.BrocadeThrottle(Connection2)
 
     print("Extracting port information from switch 1...")
@@ -64,15 +64,14 @@ def main():
 
     if Located_SW1 == True:
         print("Name/Port Combo Found on SW1. WWN is " + WWN1)
-        HTTP_Connection = http.HTTPConnection(IP1)
-        method = "POST"
-        URI = "/rest/running/zoning/defined-configuration"
-        Body = '<alias><alias-name>' + args.n + '_' + args.i + '</alias-name><member-entry><alias-entry-name>' + WWN1 + '</alias-entry-name></member-entry></alias>'
-        HTTP_Connection.request(method, URI, Body, Header1)
 
-        if Delay1 > 0:
-            time.sleep(Delay1)
-        response = HTTP_Connection.getresponse()
+        ResponseCode = BF.BrocadeAliasPost(Header1, IP1, Delay1, args.n, args.i, WWN1)
+        if ResponseCode != 201:
+            print("Alias Creation Failed!!!")
+
+        CheckSum, CfgName = BF.BrocadeInfo(Header1, IP1, Delay1)
+
+        ResponseCode = BF.BrocadeSave(Header1, IP1, Delay1, CheckSum)
 
     if Located_SW2 == True:
         print("Name/Port Combo Found on SW2. WWN is " + WWN2)
@@ -83,13 +82,15 @@ def main():
 
         CheckSum, CfgName = BF.BrocadeInfo(Header2, IP2, Delay2)
 
+        ResponseCode = BF.BrocadeSave(Header2, IP2, Delay2, CheckSum)
+
         #BF.BrocadeEnable(Header2, IP2, Delay2, CheckSum, CfgName)
 
     print("Terminating session on switch 1...")
     Disconnect1 = BF.BrocadeDisconnect(Connection1)
     if Disconnect1.get('http-resp-code') == 204:
         print("Switch1 session terminated.")
-    print("Terminating session on switch 1...")
+    print("Terminating session on switch 2...")
     Disconnect2 = BF.BrocadeDisconnect(Connection2)
     if Disconnect2.get('http-resp-code') == 204:
         print("Switch2 session terminated.")

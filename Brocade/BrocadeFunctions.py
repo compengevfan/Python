@@ -81,6 +81,24 @@ def BrocadeEnable(Header, IP, Delay, CheckSum, CfgName):
 
     print("Place holder")
 
+def BrocadeSave(Header, IP, Delay, CheckSum):
+    import time
+    import xmltodict
+    import http.client as http
+
+    HTTP_Connection = http.HTTPConnection(IP)
+    method = "PATCH"
+    URI = "/rest/running/zoning/effective-configuration/cfg-action/1"
+    Body = '<checksum>' + CheckSum + '</checksum>'
+    HTTP_Connection.request(method, URI, Body, Header)
+
+    if Delay > 0:
+        time.sleep(Delay)
+    response = HTTP_Connection.getresponse()
+    ResponseCode = response.code
+
+    return response
+
 def BrocadeInfo(Header, IP, Delay):
     #Accepts header, switch IP and delay to obtain the checksum of the switch's effective config
     #Returns the checksum
