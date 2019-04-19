@@ -24,8 +24,6 @@ def getargs():
 def main():
     args = getargs()
 
-    #print(args.e + '-' + args.u + '-' + args.p + '-' + args.n + '-' + args.i)
-
     IP1, IP2 = BF.BrocadeEnvironment(args.e)
     
     print("Connecting to switch 1...")

@@ -97,7 +97,7 @@ def BrocadeSave(Header, IP, Delay, CheckSum):
     response = HTTP_Connection.getresponse()
     ResponseCode = response.code
 
-    return response
+    return ResponseCode
 
 def BrocadeInfo(Header, IP, Delay):
     #Accepts header, switch IP and delay to obtain the checksum of the switch's effective config
