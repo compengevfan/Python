@@ -25,9 +25,20 @@ def SetupLogTypes():
 
 def InvokeLogging(LogFile,LogType,LogString):
     import datetime
+    from colorama import Fore, Back, Style
 
     CurrentDateTime = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-    LogFile.write(CurrentDateTime + " " + LogString)
+    LogFile.write(CurrentDateTime + " " + LogString + "\n")
 
-    print(CurrentDateTime + " " + LogType + " " + LogString)
+    print(Fore.LIGHTBLACK_EX + "[", end="")
+    print(Fore.GREEN + "*", end="")
+    print(Fore.LIGHTBLACK_EX + "]", end=" ")
+    if LogType == "Succ":
+        print(Fore.GREEN + LogString)
+    if LogType == "Info":
+        print(Fore.WHITE + LogString)
+    if LogType == "Warn":
+        print(Fore.YELLOW + LogString)
+    if LogType == "Err":
+        print(Fore.RED + LogString)

@@ -4,6 +4,8 @@ try:
 except:
     print("'DupreeFunctions' module not available!!! Please check with Dupree!!! Script exiting!!!")
     sys.exit(0)
+from colorama import init, deinit
+init()
 
 LogType = DF.SetupLogTypes()
 
@@ -15,9 +17,10 @@ DF.DeleteLogFiles()
 ScriptName = os.path.basename(__file__)
 ScriptStarted = datetime.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
 
-FileName = "./~Logs/" + ScriptName + " " + ScriptStarted + ".log"
+FileName = "./~Logs/" + ScriptName + "_" + ScriptStarted + ".log"
 LogFile = open(FileName, "a")
 
-# DF.InvokeLogging(LogFile,LogType.Info,"This is a Demo...")
+# DF.InvokeLogging(LogFile,LogType.Succ,"This is a Demo...")
 
 LogFile.close()
+deinit()

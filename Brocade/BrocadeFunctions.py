@@ -29,11 +29,14 @@ def BrocadeConnect(Username, Password, IP):
 
     Connection = auth.login(Username, Password, IP, "None")
 
-    Header = Connection.get('credential')
-    Header.update({'Accept': 'application/yang-data+xml'})
-    Header.update({'Content-Type': 'application/yang-data+xml'})
+    if auth.is_failed_login(Connection):
+        return 66, None
+    else:
+        Header = Connection.get('credential')
+        Header.update({'Accept': 'application/yang-data+xml'})
+        Header.update({'Content-Type': 'application/yang-data+xml'})
 
-    return Connection, Header
+        return Connection, Header
 
 def BrocadeSessionCheck(Session):
     #Accepts Brocade session and checks to see if it's still valid
@@ -79,7 +82,7 @@ def BrocadeEnable(Header, IP, Delay, CheckSum, CfgName):
         time.sleep(Delay)
     response = HTTP_Connection.getresponse()
 
-    print("Place holder")
+    return response
 
 def BrocadeSave(Header, IP, Delay, CheckSum):
     import time

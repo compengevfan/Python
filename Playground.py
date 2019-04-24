@@ -1,3 +1,2 @@
-import DupreeFunctions as DF
-
-DF.DeleteLogFiles()
+print("Test", end="")
+print("Test2")
