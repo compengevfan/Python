@@ -9,7 +9,7 @@
 import os, sys, datetime
 try:
     import DupreeFunctions as DF
-except:
+except ModuleNotFoundError:
     print("'DupreeFunctions' module not available!!! Please check with Dupree!!! Script exiting!!!")
     sys.exit(0)
 from colorama import init, deinit
