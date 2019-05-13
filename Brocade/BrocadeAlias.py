@@ -82,7 +82,7 @@ DF.InvokeLogging(LogFile,LogType.Info,"Checking switch 1...")
 Located_SW1 = False
 for i in range(0, len(PortInfo1['Response']['fibrechannel'])):
     Name = PortInfo1['Response']['fibrechannel'][i]['user-friendly-name']
-    if args.n in Name and args.i in Name:
+    if (args.n + "_" + args.i) in Name:
         Located_SW1 = True
         WWN1 = PortInfo1['Response']['fibrechannel'][i]['neighbor']['wwn']
 
@@ -90,7 +90,7 @@ Located_SW2 = False
 DF.InvokeLogging(LogFile,LogType.Info,"Checking switch 2...")
 for i in range(0, len(PortInfo2['Response']['fibrechannel'])):
     Name = PortInfo2['Response']['fibrechannel'][i]['user-friendly-name']
-    if args.n in Name and args.i in Name:
+    if (args.n + "_" + args.i) in Name:
         Located_SW2 = True
         WWN2 = PortInfo2['Response']['fibrechannel'][i]['neighbor']['wwn']
 
