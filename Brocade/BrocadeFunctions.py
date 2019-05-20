@@ -1,4 +1,4 @@
-def BrocadeEnvironment(Environment):
+def Environment(Environment):
     #Accepts an environment (or obtains it if not an argument)
     #Returns the appropriate IP addresses of the Brocade switches for that environment
     import sys
@@ -21,7 +21,7 @@ def BrocadeEnvironment(Environment):
 
     return SW1_IP, SW2_IP
 
-def BrocadeConnect(Username, Password, IP):
+def Connect(Username, Password, IP):
     #Accepts Brocade IP, Username and Password.
     #Creates a connection to a switch.
     #Returns the header for that switch and the session created.
@@ -38,18 +38,18 @@ def BrocadeConnect(Username, Password, IP):
 
         return Connection, Header
 
-def BrocadeSessionCheck(Session):
+def SessionCheck(Session):
     #Accepts Brocade session and checks to see if it's still valid
     print("Place holder")
 
-def BrocadeThrottle(Connection):
+def Throttle(Connection):
     #Accepts a Brocade session and extracts the throttle delay
     #Returns the value
     Delay = Connection.get('throttle_delay')
 
     return Delay
 
-def BrocadeAliasPost(Header, IP, Delay, Name, Port, WWN):
+def AliasPost(Header, IP, Delay, Name, Port, WWN):
     #Accepts header, switch IP, delay time, alias name, port ID, and WWN 
     #Returns response code from the HTTP request
     import time
@@ -58,7 +58,10 @@ def BrocadeAliasPost(Header, IP, Delay, Name, Port, WWN):
     HTTP_Connection = http.HTTPConnection(IP)
     method = "POST"
     URI = "/rest/running/zoning/defined-configuration/alias"
-    Body = '<alias><alias-name>' + Name + '_' + Port + '</alias-name><member-entry><alias-entry-name>' + WWN + '</alias-entry-name></member-entry></alias>'
+    if Port == None:
+        Body = '<alias><alias-name>' + Name + '</alias-name><member-entry><alias-entry-name>' + WWN + '</alias-entry-name></member-entry></alias>'
+    else:
+        Body = '<alias><alias-name>' + Name + '_' + Port + '</alias-name><member-entry><alias-entry-name>' + WWN + '</alias-entry-name></member-entry></alias>'
     HTTP_Connection.request(method, URI, Body, Header)
 
     if Delay > 0:
@@ -68,7 +71,7 @@ def BrocadeAliasPost(Header, IP, Delay, Name, Port, WWN):
 
     return ResponseCode
 
-def BrocadeEnable(Header, IP, Delay, CheckSum, CfgName):
+def Enable(Header, IP, Delay, CheckSum, CfgName):
     import time
     import http.client as http
 
@@ -84,7 +87,7 @@ def BrocadeEnable(Header, IP, Delay, CheckSum, CfgName):
 
     return response
 
-def BrocadeSave(Header, IP, Delay, CheckSum):
+def Save(Header, IP, Delay, CheckSum):
     import time
     import xmltodict
     import http.client as http
@@ -102,7 +105,7 @@ def BrocadeSave(Header, IP, Delay, CheckSum):
 
     return ResponseCode
 
-def BrocadeInfo(Header, IP, Delay):
+def Info(Header, IP, Delay):
     #Accepts header, switch IP and delay to obtain the checksum of the switch's effective config
     #Returns the checksum
     import time
@@ -126,7 +129,7 @@ def BrocadeInfo(Header, IP, Delay):
 
     return CheckSum, CfgName
 
-def BrocadePortList(Header, IP, Delay):
+def PortList(Header, IP, Delay):
     #Accepts header, switch IP and delay time to perform REST call
     #Performs REST call and obtains all the switch port information.
     #Extracts needed info and returns that info as a list/dict
@@ -153,7 +156,7 @@ def BrocadePortList(Header, IP, Delay):
     # return ReturnList
     return RespBody
 
-def BrocadeDisconnect(Session):
+def Disconnect(Session):
     #Accepts session to terminate.
     import pyfos.pyfos_auth as auth
 

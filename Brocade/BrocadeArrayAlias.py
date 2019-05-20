@@ -1,7 +1,7 @@
 #Parameters: 
 #   Environment
-#   Server/Array Name
-#   Port/Director Identifier.
+#   Array Name
+#   Director Identifier.
 #   Username
 #   Password - Optional. If not provided, you will be prompted.
 #Looks for the server/array name in the port listing to get the WWN.
@@ -37,8 +37,8 @@ LogFile = open(FileName, "a")
 def getargs():
     parser = argparse.ArgumentParser()
     parser.add_argument('e', action='store', help='PROD, DEV, DR')
-    parser.add_argument('n', action='store', help='Server or Array Name')
-    parser.add_argument('i', action='store', help='Port or Director Identifier')
+    parser.add_argument('n', action='store', help='Array Name')
+    parser.add_argument('i', action='store', help='Director Identifier')
     parser.add_argument('u', action='store', help='Username')
     parser.add_argument('-p', action='store', help='Password. If running from terminal, do not use this argument. You will be prompted for your password.')
     args = parser.parse_args()
@@ -49,31 +49,31 @@ args = getargs()
 if args.p == None:
     args.p = getpass.getpass(prompt="Please provide your password: ")
 
-IP1, IP2 = BF.BrocadeEnvironment(args.e)
+IP1, IP2 = BF.Environment(args.e)
 
 DF.InvokeLogging(LogFile,LogType.Info,"Connecting to switch 1...")
-Connection1, Header1 = BF.BrocadeConnect(args.u, args.p, IP1)
+Connection1, Header1 = BF.Connect(args.u, args.p, IP1)
 if Connection1 == 66:
     DF.InvokeLogging(LogFile,LogType.Err,"Connection to switch 1 failed!!! Script exiting!!!")
     sys.exit(0)
 DF.InvokeLogging(LogFile,LogType.Info,"Connecting to switch 2...")
-Connection2, Header2 = BF.BrocadeConnect(args.u, args.p, IP2)
+Connection2, Header2 = BF.Connect(args.u, args.p, IP2)
 if Connection2 == 66:
     DF.InvokeLogging(LogFile,LogType.Err,"Connection to switch 2 failed!!!")
     DF.InvokeLogging(LogFile,LogType.Info,"Disconnecting from switch 1...")
-    Disconnect1 = BF.BrocadeDisconnect(Connection1)
+    Disconnect1 = BF.Disconnect(Connection1)
     DF.InvokeLogging(LogFile,LogType.Info,"Script exiting!!!")
     sys.exit(0)
 
 DF.InvokeLogging(LogFile,LogType.Succ,"Extracting throttle delay setting for switch 1...")
-Delay1 = BF.BrocadeThrottle(Connection1)
+Delay1 = BF.Throttle(Connection1)
 DF.InvokeLogging(LogFile,LogType.Succ,"Extracting throttle delay setting for switch 2...")
-Delay2 = BF.BrocadeThrottle(Connection2)
+Delay2 = BF.Throttle(Connection2)
 
 DF.InvokeLogging(LogFile,LogType.Succ,"Extracting port information from switch 1...")
-PortInfo1 = BF.BrocadePortList(Header1, IP1, Delay1)
+PortInfo1 = BF.PortList(Header1, IP1, Delay1)
 DF.InvokeLogging(LogFile,LogType.Succ,"Extracting port information from switch 2...")
-PortInfo2 = BF.BrocadePortList(Header2, IP2, Delay2)
+PortInfo2 = BF.PortList(Header2, IP2, Delay2)
 
 DF.InvokeLogging(LogFile,LogType.Info,"Locating name/port combo provided...")
 DF.InvokeLogging(LogFile,LogType.Info,"Obtaining WWN if name found...")
@@ -98,47 +98,47 @@ if Located_SW1 == True:
     DF.InvokeLogging(LogFile,LogType.Succ,"Name/Port Combo Found on SW1. WWN is " + WWN1)
 
     DF.InvokeLogging(LogFile,LogType.Info,"Submitting command to create alias " + args.n + '_' + args.i)
-    ResponseCode = BF.BrocadeAliasPost(Header1, IP1, Delay1, args.n, args.i, WWN1)
+    ResponseCode = BF.AliasPost(Header1, IP1, Delay1, args.n, args.i, WWN1)
     if ResponseCode != 201:
         DF.InvokeLogging(LogFile,LogType.Err,"Alias creation failed!!! Since you made it this far without hitting any errors, this probably means the alias already exists.")
         DF.InvokeLogging(LogFile,LogType.Err,"Please check your inputs and try again.")
         DF.InvokeLogging(LogFile,LogType.Info,"Terminating session on switch 1...")
-        Disconnect1 = BF.BrocadeDisconnect(Connection1)
+        Disconnect1 = BF.Disconnect(Connection1)
         DF.InvokeLogging(LogFile,LogType.Info,"Terminating session on switch 2...")
-        Disconnect2 = BF.BrocadeDisconnect(Connection2)
+        Disconnect2 = BF.Disconnect(Connection2)
         DF.InvokeLogging(LogFile,LogType.Info,"Script exiting!!!")
         sys.exit(0)
     else:
         DF.InvokeLogging(LogFile,LogType.Succ,"Alias created successfully.")
 
     DF.InvokeLogging(LogFile,LogType.Info,"Obtaining the switch config checksum...")
-    CheckSum, CfgName = BF.BrocadeInfo(Header1, IP1, Delay1)
+    CheckSum, CfgName = BF.Info(Header1, IP1, Delay1)
 
     DF.InvokeLogging(LogFile,LogType.Info,"Saving config...")
-    ResponseCode = BF.BrocadeSave(Header1, IP1, Delay1, CheckSum)
+    ResponseCode = BF.Save(Header1, IP1, Delay1, CheckSum)
 
 if Located_SW2 == True:
     DF.InvokeLogging(LogFile,LogType.Succ,"Name/Port Combo Found on SW2. WWN is " + WWN2)
 
     DF.InvokeLogging(LogFile,LogType.Info,"Submitting command to create alias " + args.n + "_" + args.i + "...")
-    ResponseCode = BF.BrocadeAliasPost(Header2, IP2, Delay2, args.n, args.i, WWN2)
+    ResponseCode = BF.AliasPost(Header2, IP2, Delay2, args.n, args.i, WWN2)
     if ResponseCode != 201:
         DF.InvokeLogging(LogFile,LogType.Err,"Alias creation failed!!! Since you made it this far without hitting any errors, this probably means the alias already exists.")
         DF.InvokeLogging(LogFile,LogType.Err,"Please check your inputs and try again.")
         DF.InvokeLogging(LogFile,LogType.Info,"Terminating session on switch 1...")
-        Disconnect1 = BF.BrocadeDisconnect(Connection1)
+        Disconnect1 = BF.Disconnect(Connection1)
         DF.InvokeLogging(LogFile,LogType.Info,"Terminating session on switch 2...")
-        Disconnect2 = BF.BrocadeDisconnect(Connection2)
+        Disconnect2 = BF.Disconnect(Connection2)
         DF.InvokeLogging(LogFile,LogType.Info,"Script exiting!!!")
         sys.exit(0)
     else:
         DF.InvokeLogging(LogFile,LogType.Succ,"Alias created successfully.")
 
     DF.InvokeLogging(LogFile,LogType.Info,"Obtaining the switch config checksum...")
-    CheckSum, CfgName = BF.BrocadeInfo(Header2, IP2, Delay2)
+    CheckSum, CfgName = BF.Info(Header2, IP2, Delay2)
 
     DF.InvokeLogging(LogFile,LogType.Info,"Saving config...")
-    ResponseCode = BF.BrocadeSave(Header2, IP2, Delay2, CheckSum)
+    ResponseCode = BF.Save(Header2, IP2, Delay2, CheckSum)
 
 if Located_SW1 == False and Located_SW2 == False:
     DF.InvokeLogging(LogFile,LogType.Warn,"Name/Port Combo not found!!! Please check your inputs and try again!!!")
@@ -149,11 +149,11 @@ else:
     DF.InvokeLogging(LogFile,LogType.Err,"Configuration save failed!!!")
 
 DF.InvokeLogging(LogFile,LogType.Info,"Terminating session on switch 1...")
-Disconnect1 = BF.BrocadeDisconnect(Connection1)
+Disconnect1 = BF.Disconnect(Connection1)
 if Disconnect1.get('http-resp-code') == 204:
     DF.InvokeLogging(LogFile,LogType.Succ,"Switch1 session terminated.")
 DF.InvokeLogging(LogFile,LogType.Info,"Terminating session on switch 2...")
-Disconnect2 = BF.BrocadeDisconnect(Connection2)
+Disconnect2 = BF.Disconnect(Connection2)
 if Disconnect2.get('http-resp-code') == 204:
     DF.InvokeLogging(LogFile,LogType.Succ,"Switch2 session terminated.")
 
