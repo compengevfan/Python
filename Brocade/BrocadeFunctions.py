@@ -71,6 +71,14 @@ def AliasPost(Header, IP, Delay, Name, Port, WWN):
 
     return ResponseCode
 
+def ZonePatch(Header, IP, Delay):
+    import time
+    import http.client as http
+
+    HTTP_Connection = http.HTTPConnection(IP)
+    method = "PATCH"
+    URI = "/rest/running/zoning/defined-configuration/zone"
+
 def Enable(Header, IP, Delay, CheckSum, CfgName):
     import time
     import http.client as http
@@ -128,6 +136,25 @@ def Info(Header, IP, Delay):
     CfgName = RespBody['Response']['effective-configuration']['cfg-name']
 
     return CheckSum, CfgName
+
+def Probe(Header, IP, Delay):
+    import time
+    import xmltodict
+    import http.client as http
+
+    HTTP_Connection = http.HTTPConnection(IP)
+    method = "GET"
+    URI = "/running/zoning/defined-configuration/cfg/cfg-name/zs_CSXT_TEST_G630A/member-zone"
+    Body = None
+    HTTP_Connection.request(method, URI, Body, Header)
+
+    if Delay > 0:
+        time.sleep(Delay)
+    response = HTTP_Connection.getresponse()
+
+    RespBody = xmltodict.parse(response.read())
+
+    print("Place holder")
 
 def PortList(Header, IP, Delay):
     #Accepts header, switch IP and delay time to perform REST call
