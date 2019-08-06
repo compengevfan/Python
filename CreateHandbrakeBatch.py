@@ -5,10 +5,10 @@ import getpass
 
 def getargs():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-d', required=True, action='store', help='Disk Type: d = DVD; b = Blu-ray')
-	parser.add_argument('-s', required=True, action='store', help='Series Name')
-	parser.add_argument('-n', required=True, action='store', help='Season Number')
-	parser.add_argument('-p', required=True, action='store', help='Season Path')
+	parser.add_argument('d', action='store', help='Disk Type: d = DVD; b = Blu-ray')
+	parser.add_argument('s', action='store', help='Series Name')
+	parser.add_argument('n', action='store', help='Season Number')
+	parser.add_argument('p', action='store', help='Season Path')
 	args = parser.parse_args()
 	return args
 
@@ -44,19 +44,17 @@ def main():
 				EpisodeNumber = i
 			Title = input("Title number for episode " + str(EpisodeNumber) + ": ")
 			InputLocation = '"' + args.p + "\\" + disk + '" -t'
-			OutputLocation = '-o "\\\storage1\media\TV Shows\\' + args.s + "\Season " + args.n + "\\" + args.s + " - s" + args.n + "e" + str(EpisodeNumber)
+			OutputLocation = r'-o "\\storage1\media\TV Shows\\' + args.s + r"\Season " + args.n + r"\\" + args.s + " - s" + args.n + "e" + str(EpisodeNumber)
 			BatchFileOutput += BeginCommand + " " + InputLocation + " " + str(Title) + " " + OutputLocation + EndCommand + "\n"
-			
-			#print BatchFileOutput
 			
 			EpisodeCount -= 1
 			i += 1
 		print("Going to next disk...")
 
-	if not os.access("C:\Cloud\Dropbox\EpisodeTracker\\" + args.s, os.F_OK):
-		os.mkdir("C:\Cloud\Dropbox\EpisodeTracker\\" + args.s)
+	if not os.access(r"C:\Cloud\Dropbox\EpisodeTracker\\" + args.s, os.F_OK):
+		os.mkdir(r"C:\Cloud\Dropbox\EpisodeTracker\\" + args.s)
 	
-	BatFile = open("C:\Cloud\Dropbox\EpisodeTracker\\" + args.s + "\Season " + args.n + ".bat", "w")
+	BatFile = open(r"C:\Cloud\Dropbox\EpisodeTracker\\" + args.s + r"\Season " + args.n + r".bat", "w")
 	BatFile.write(BatchFileOutput)
 	BatFile.close()
 
