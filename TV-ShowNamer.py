@@ -9,7 +9,9 @@ from pathlib import Path
 
 def getargs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('environment', action='store', help='PROD, DEV, DR')
+    parser.add_argument('ShowType', action='store', help='TV1,TV2,Cartoon')
+    parser.add_argument('ShowName', action='store')
+    parser.add_argument('Season', action='store')
     args = parser.parse_args()
     return args
 
@@ -37,4 +39,4 @@ def main():
     deinit()
 
 if __name__ == "__main__":
-    main()
+        main()
