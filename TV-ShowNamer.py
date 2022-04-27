@@ -1,11 +1,11 @@
 import os, sys, datetime, argparse
+import pathlib
 try:
     import DupreeFunctions as DF
 except ModuleNotFoundError:
     print("'DupreeFunctions' module not available!!! Please check with Dupree!!! Script exiting!!!")
     sys.exit(0)
 from colorama import init, deinit
-from pathlib import Path
 
 def getargs():
     parser = argparse.ArgumentParser()
@@ -20,12 +20,12 @@ def main():
 
     LogType = DF.SetupLogTypes()
 
-    if not os.path.exists("./~Logs"):
-        os.mkdir("./~Logs")
+    if not pathlib.Path.exists("./~Logs"):
+        pathlib.Path.mkdir("./~Logs")
 
     DF.DeleteLogFiles()
 
-    ScriptName = os.path.basename(__file__)
+    ScriptName = pathlib.PurePath.name(__file__)
     ScriptStarted = datetime.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
 
     FileName = "./~Logs/" + ScriptName + "_" + ScriptStarted + ".log"
@@ -34,6 +34,10 @@ def main():
     args = getargs()
 
     # DF.InvokeLogging(LogFile,LogType.Succ,"This is a Demo...")
+    string = '\\\\storage1\Media\TV Shows\Agents of S.H.I.E.L.D\Season 1'
+    p = pathlib.PureWindowsPath(string)
+    dir = pathlib.Path(p)
+    for child in dir.iterdir(): child
 
     LogFile.close()
     deinit()
