@@ -35,11 +35,11 @@ def main():
 
     # DF.InvokeLogging(LogFile,LogType.Succ,"This is a Demo...")
     if args.ShowType == 'TV1':
-        FolderPath = '//storage1/Media/TV Shows/' + args.ShowName + '/Season ' + args.Season
+        FolderPath = '/mnt/TV1/TV\ Shows/' + args.ShowName + '/Season ' + args.Season
     if args.ShowType == 'TV2':
-        FolderPath = '//storage2/Media/TV Shows/' + args.ShowName + '/Season ' + args.Season
+        FolderPath = '/mnt/TV2/TV\ Shows/' + args.ShowName + '/Season ' + args.Season
     if args.ShowType == 'Cartoon':
-        FolderPath = '//storage1/Cartoons/TV Shows/' + args.ShowName + '/Season ' + args.Season
+        FolderPath = '/mnt/TV1/Cartoons/' + args.ShowName + '/Season ' + args.Season
     # string = '//storage1/Media/TV Shows/Agents of S.H.I.E.L.D/Season 1'
     # p = pathlib.PureWindowsPath(string)
     # dir = pathlib.Path(p)
